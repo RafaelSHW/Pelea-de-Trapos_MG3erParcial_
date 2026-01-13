@@ -15,7 +15,16 @@ public class PlayerCombat : MonoBehaviour
     public float punchHitTime = 0.25f; // cuando el puño conecta
     public float kickHitTime = 0.35f;  // cuando la patada conecta
 
+    [Header("Animator Layers")]
+    [SerializeField] private int punchLayerIndex = 1;
+    [SerializeField] private float layerBlendTime = 0.1f;
+
     private bool isAttacking = false;
+
+    void Start()
+    {
+        animator.SetLayerWeight(punchLayerIndex, 0f);
+    }
 
     void Update()
     {
@@ -32,6 +41,8 @@ public class PlayerCombat : MonoBehaviour
     {
         isAttacking = true;
 
+        yield return StartCoroutine(BlendLayerWeight(punchLayerIndex, 1f, layerBlendTime));
+
         animator.ResetTrigger("Punch");
         animator.SetTrigger("Punch");
 
@@ -39,6 +50,9 @@ public class PlayerCombat : MonoBehaviour
         TryHit(punchPoints);
 
         yield return new WaitForSeconds(GetAnimationLength("Punch") - punchHitTime);
+
+        yield return StartCoroutine(BlendLayerWeight(punchLayerIndex, 0f, layerBlendTime));
+
         isAttacking = false;
     }
 
@@ -74,5 +88,20 @@ public class PlayerCombat : MonoBehaviour
         }
 
         return 0.6f; 
+    }
+
+    IEnumerator BlendLayerWeight(int layer, float target, float duration)
+    {
+        float start = animator.GetLayerWeight(layer);
+        float time = 0f;
+
+        while (time < duration)
+        {
+            time += Time.deltaTime;
+            animator.SetLayerWeight(layer, Mathf.Lerp(start, target, time / duration));
+            yield return null;
+        }
+
+        animator.SetLayerWeight(layer, target);
     }
 }
