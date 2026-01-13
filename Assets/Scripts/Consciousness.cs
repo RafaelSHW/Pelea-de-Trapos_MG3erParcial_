@@ -3,31 +3,53 @@ using System.Collections;
 
 public class Consciousness : MonoBehaviour
 {
+    [Header("Consciousness")]
     public int maxConsciousness = 100;
-    public float ragdollDuration = 5f;
+    public int currentConsciousness;
 
-    private int current;
+    [Header("Knockdown")]
+    public float knockdownTime = 5f;
+
+    private bool isKnockedDown = false;
     private RagdollController ragdoll;
 
     void Awake()
     {
-        current = maxConsciousness;
+        currentConsciousness = maxConsciousness;
         ragdoll = GetComponent<RagdollController>();
     }
 
     public void ReceiveImpact(int amount)
     {
-        current -= amount;
+        if (isKnockedDown) return;
 
-        if (current <= 0)
-            StartCoroutine(RagdollState());
+        currentConsciousness -= amount;
+        currentConsciousness = Mathf.Max(currentConsciousness, 0);
+
+        if (currentConsciousness <= 0)
+        {
+            StartCoroutine(Knockdown());
+        }
     }
 
-    IEnumerator RagdollState()
+    IEnumerator Knockdown()
     {
-        ragdoll.EnableRagdoll(true);
-        yield return new WaitForSeconds(ragdollDuration);
-        current = maxConsciousness;
-        ragdoll.EnableRagdoll(false);
+        isKnockedDown = true;
+
+        // Activar ragdoll
+        ragdoll.SetRagdoll(true);
+
+        yield return new WaitForSeconds(knockdownTime);
+
+        // Levantarse
+        ragdoll.SetRagdoll(false);
+        currentConsciousness = maxConsciousness;
+
+        isKnockedDown = false;
+    }
+
+    public bool IsKnockedDown()
+    {
+        return isKnockedDown;
     }
 }

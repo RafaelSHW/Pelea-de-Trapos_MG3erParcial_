@@ -2,24 +2,55 @@ using UnityEngine;
 
 public class RagdollController : MonoBehaviour
 {
-    private Rigidbody[] bodies;
+    private Rigidbody[] rigidbodies;
+    private Collider[] colliders;
+
     private Animator animator;
+    private CharacterController characterController;
 
     void Awake()
     {
-        bodies = GetComponentsInChildren<Rigidbody>();
         animator = GetComponent<Animator>();
-        EnableRagdoll(false);
+        characterController = GetComponent<CharacterController>();
+
+        rigidbodies = GetComponentsInChildren<Rigidbody>();
+        colliders = GetComponentsInChildren<Collider>();
+
+        SetRagdoll(false);
     }
 
-    public void EnableRagdoll(bool active)
+    public void SetRagdoll(bool state)
     {
-        animator.enabled = !active;
+        // Activar / desactivar Animator
+        if (animator != null)
+            animator.enabled = !state;
 
-        foreach (Rigidbody rb in bodies)
+        // Activar / desactivar CharacterController
+        if (characterController != null)
+            characterController.enabled = !state;
+
+        foreach (Rigidbody rb in rigidbodies)
         {
-            rb.isKinematic = !active;
-            rb.detectCollisions = active;
+            if (rb == null) continue;
+
+            rb.isKinematic = !state;
+
+            if (state)
+            {
+                // Solo cuando el ragdoll está ACTIVO
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+            }
+        }
+
+        foreach (Collider col in colliders)
+        {
+            if (col == null) continue;
+
+            // Evitamos apagar el collider raíz (si existe)
+            if (col.transform == transform) continue;
+
+            col.enabled = state;
         }
     }
 }
