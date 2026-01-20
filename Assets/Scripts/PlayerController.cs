@@ -1,35 +1,48 @@
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(Consciousness))]
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement")]
     public float moveSpeed = 5f;
-    public float mouseSensitivity = 2f;
     public float gravity = -9.81f;
+    public float mouseSensitivity = 2f;
 
     [Header("References")]
     public Transform cameraPivot;
     public Animator animator;
 
     private CharacterController controller;
+    private Consciousness consciousness;
+
     private float xRotation = 0f;
-    private Vector3 velocity;
+    private Vector3 verticalVelocity;
 
     void Awake()
     {
         controller = GetComponent<CharacterController>();
+        consciousness = GetComponent<Consciousness>();
+
+        if (animator == null)
+            animator = GetComponent<Animator>();
+
         Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     void Update()
     {
-        Move();
-        Look();
-        UpdateAnimations();
+        if (consciousness != null && consciousness.IsKnockedDown())
+            return;
+
+        HandleMovement();
+        HandleLook();
+        HandleAnimations();
     }
 
-    void Move()
+    void HandleMovement()
     {
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
@@ -37,11 +50,15 @@ public class PlayerController : MonoBehaviour
         Vector3 move = transform.right * x + transform.forward * z;
         controller.Move(move * moveSpeed * Time.deltaTime);
 
-        velocity.y += gravity * Time.deltaTime;
-        controller.Move(velocity * Time.deltaTime);
+        // Gravedad
+        if (controller.isGrounded && verticalVelocity.y < 0)
+            verticalVelocity.y = -2f;
+
+        verticalVelocity.y += gravity * Time.deltaTime;
+        controller.Move(verticalVelocity * Time.deltaTime);
     }
 
-    void Look()
+    void HandleLook()
     {
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * 100f * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * 100f * Time.deltaTime;
@@ -53,12 +70,12 @@ public class PlayerController : MonoBehaviour
         transform.Rotate(Vector3.up * mouseX);
     }
 
-    void UpdateAnimations()
+    void HandleAnimations()
     {
-       float x = Input.GetAxis("Horizontal");
-      float z = Input.GetAxis("Vertical");
+        float x = Input.GetAxis("Horizontal");
+        float z = Input.GetAxis("Vertical");
 
-      bool isWalking = Mathf.Abs(x) > 0.1f || Mathf.Abs(z) > 0.1f;
-      animator.SetBool("IsWalking", isWalking);
+        bool isWalking = Mathf.Abs(x) > 0.1f || Mathf.Abs(z) > 0.1f;
+        animator.SetBool("IsWalking", isWalking);
     }
 }

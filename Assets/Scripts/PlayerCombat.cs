@@ -19,11 +19,14 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private int punchLayerIndex = 1;
     [SerializeField] private float layerBlendTime = 0.1f;
 
+    private PlayerGrabSystem grabSystem;
+
     private bool isAttacking = false;
 
     void Start()
     {
         animator.SetLayerWeight(punchLayerIndex, 0f);
+        grabSystem = GetComponent<PlayerGrabSystem>();
     }
 
     void Update()
@@ -44,7 +47,14 @@ public class PlayerCombat : MonoBehaviour
         yield return StartCoroutine(BlendLayerWeight(punchLayerIndex, 1f, layerBlendTime));
 
         animator.ResetTrigger("Punch");
-        animator.SetTrigger("Punch");
+        animator.ResetTrigger("AttackWithObject");
+
+        if (grabSystem != null && grabSystem.IsHoldingObject())
+            animator.SetTrigger("AttackWithObject");
+        
+        else
+            animator.SetTrigger("Punch");
+        
 
         yield return new WaitForSeconds(punchHitTime);
         TryHit(punchPoints);
@@ -54,6 +64,10 @@ public class PlayerCombat : MonoBehaviour
         yield return StartCoroutine(BlendLayerWeight(punchLayerIndex, 0f, layerBlendTime));
 
         isAttacking = false;
+    }
+    public void ObjectHit()
+    {        
+        TryHit(punchPoints);
     }
 
     IEnumerator Kick()
