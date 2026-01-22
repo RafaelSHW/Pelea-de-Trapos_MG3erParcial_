@@ -7,24 +7,25 @@ public class Consciousness : MonoBehaviour
     public int maxConsciousness = 100;
     public int currentConsciousness;
 
-    [Header("Knockdown")]
-    public float knockdownTime = 5f;
+    [Header("Knockdown / Ragdoll")]
+    public float ragdollTime = 5f;
 
-    private bool isKnockedDown = false;
+    private bool isUnconscious = false;
+
     private RagdollController ragdoll;
 
     void Awake()
     {
-        currentConsciousness = maxConsciousness;
         ragdoll = GetComponent<RagdollController>();
+        currentConsciousness = maxConsciousness;
     }
 
     public void ReceiveImpact(int amount)
     {
-        if (isKnockedDown) return;
+        if (isUnconscious) return;
 
         currentConsciousness -= amount;
-        currentConsciousness = Mathf.Max(currentConsciousness, 0);
+        currentConsciousness = Mathf.Clamp(currentConsciousness, 0, maxConsciousness);
 
         if (currentConsciousness <= 0)
         {
@@ -32,24 +33,32 @@ public class Consciousness : MonoBehaviour
         }
     }
 
-    IEnumerator Knockdown()
+    private IEnumerator Knockdown()
     {
-        isKnockedDown = true;
+        isUnconscious = true;
 
-        // Activar ragdoll
-        ragdoll.SetRagdoll(true);
+        if (ragdoll != null)
+            ragdoll.SetRagdoll(true);
 
-        yield return new WaitForSeconds(knockdownTime);
+        yield return new WaitForSeconds(ragdollTime);
 
-        // Levantarse
-        ragdoll.SetRagdoll(false);
+        if (ragdoll != null)
+            ragdoll.SetRagdoll(false);
+
         currentConsciousness = maxConsciousness;
-
-        isKnockedDown = false;
+        isUnconscious = false;
+    }
+    /// <summary>
+    /// </summary>
+    public bool IsUnconscious()
+    {
+        return isUnconscious;
     }
 
+    /// <summary>
+    /// </summary>
     public bool IsKnockedDown()
     {
-        return isKnockedDown;
+        return isUnconscious;
     }
 }
