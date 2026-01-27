@@ -112,6 +112,7 @@ public class PlayerCombat : MonoBehaviour
             if (target != null)
             {
                 target.ReceiveImpact(points);
+                GameManager.instance.AddPoints(true, 20);
             }
         }
     }

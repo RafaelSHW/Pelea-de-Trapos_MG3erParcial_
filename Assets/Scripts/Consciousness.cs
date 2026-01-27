@@ -29,6 +29,9 @@ public class Consciousness : MonoBehaviour
 
         if (currentConsciousness <= 0)
         {
+            bool isEnemy = gameObject.CompareTag("Enemy");
+            if (isEnemy) GameManager.instance.AddPoints(true, 5);
+
             StartCoroutine(Knockdown());
         }
     }
