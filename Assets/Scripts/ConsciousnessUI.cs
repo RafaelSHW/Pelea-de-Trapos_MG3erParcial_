@@ -29,7 +29,7 @@ public class ConsciousnessUI : MonoBehaviour
         if (target == null || sliderUI == null) return;
 
         sliderUI.value = target.currentConsciousness;
-        UpdateVisuals();
+        //UpdateVisuals();
     }
 
     void UpdateVisuals()
