@@ -145,4 +145,11 @@ public class PlayerCombat : MonoBehaviour
 
         animator.SetLayerWeight(layer, target);
     }
+    public void DealDamage()
+    {
+    }
+
+    public void EndAttack()
+    {
+    }
 }

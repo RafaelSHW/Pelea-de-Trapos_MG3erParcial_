@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("References")]
     public Animator animator;
+    public Transform cameraTransform;
 
     private CharacterController controller;
     private Consciousness consciousness;
@@ -24,6 +25,9 @@ public class PlayerController : MonoBehaviour
 
         if (animator == null)
             animator = GetComponent<Animator>();
+
+        if (cameraTransform == null && Camera.main != null)
+            cameraTransform = Camera.main.transform;
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -43,15 +47,23 @@ public class PlayerController : MonoBehaviour
         float x = Input.GetAxisRaw("Horizontal");
         float z = Input.GetAxisRaw("Vertical");
 
-        Vector3 direction = new Vector3(x, 0f, z).normalized;
+        Vector3 inputDirection = new Vector3(x, 0f, z).normalized;
 
-        if (direction.magnitude >= 0.1f)
+        if (inputDirection.magnitude >= 0.1f)
         {
-            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0f, targetAngle, 0f), rotationSpeed * Time.deltaTime);
+            Vector3 forward = cameraTransform.forward;
+            Vector3 right = cameraTransform.right;
+            forward.y = 0f;
+            right.y = 0f;
+            forward.Normalize();
+            right.Normalize();
 
-            Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-            controller.Move(moveDir.normalized * moveSpeed * Time.deltaTime);
+            Vector3 moveDirection = (forward * inputDirection.z + right * inputDirection.x).normalized;
+
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+
+            controller.Move(moveDirection * moveSpeed * Time.deltaTime);
         }
 
         if (controller.isGrounded && verticalVelocity.y < 0)
@@ -71,4 +83,7 @@ public class PlayerController : MonoBehaviour
         bool isWalking = Mathf.Abs(x) > 0.1f || Mathf.Abs(z) > 0.1f;
         animator.SetBool("IsWalking", isWalking);
     }
+
+    public void DealDamage() { }
+    public void EndAttack() { }
 }
