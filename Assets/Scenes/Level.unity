@@ -9434,6 +9434,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6414094603331146924, guid: 6e49af6b5b9b90647b85280ea04f9a8f, type: 3}
+      propertyPath: DeathClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 4ecc98f8c42a7f54d85dfa88c4e07d06, type: 3}
+    - target: {fileID: 6414094603331146924, guid: 6e49af6b5b9b90647b85280ea04f9a8f, type: 3}
+      propertyPath: audioSource
+      value: 
+      objectReference: {fileID: 1478895984}
     - target: {fileID: 7440885684871340192, guid: 6e49af6b5b9b90647b85280ea04f9a8f, type: 3}
       propertyPath: m_Name
       value: FedeTpose
@@ -9494,6 +9502,18 @@ PrefabInstance:
       propertyPath: cameraTransform
       value: 
       objectReference: {fileID: 1748903779}
+    - target: {fileID: 8611968577027140896, guid: 6e49af6b5b9b90647b85280ea04f9a8f, type: 3}
+      propertyPath: hitClip
+      value: 
+      objectReference: {fileID: 8300000, guid: ad3e4c4ae7bb24b44b7926cff80226ba, type: 3}
+    - target: {fileID: 8611968577027140896, guid: 6e49af6b5b9b90647b85280ea04f9a8f, type: 3}
+      propertyPath: KickClip
+      value: 
+      objectReference: {fileID: 8300000, guid: ad3e4c4ae7bb24b44b7926cff80226ba, type: 3}
+    - target: {fileID: 8611968577027140896, guid: 6e49af6b5b9b90647b85280ea04f9a8f, type: 3}
+      propertyPath: audioSource
+      value: 
+      objectReference: {fileID: 1478895984}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -12805,13 +12825,29 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 556781567313928166, guid: 0f1d12797ec960541ae67ec88386f6e6, type: 3}
+      propertyPath: hitClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 4d6acd09d93f72943966015c0eba51d1, type: 3}
+    - target: {fileID: 556781567313928166, guid: 0f1d12797ec960541ae67ec88386f6e6, type: 3}
       propertyPath: attackRange
       value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 556781567313928166, guid: 0f1d12797ec960541ae67ec88386f6e6, type: 3}
+      propertyPath: audioSource
+      value: 
+      objectReference: {fileID: 1478895984}
+    - target: {fileID: 556781567313928166, guid: 0f1d12797ec960541ae67ec88386f6e6, type: 3}
       propertyPath: playerLayer.m_Bits
       value: 256
       objectReference: {fileID: 0}
+    - target: {fileID: 1460550105735726214, guid: 0f1d12797ec960541ae67ec88386f6e6, type: 3}
+      propertyPath: DeathClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 9a0aa7c23d909f547944e13797528e31, type: 3}
+    - target: {fileID: 1460550105735726214, guid: 0f1d12797ec960541ae67ec88386f6e6, type: 3}
+      propertyPath: audioSource
+      value: 
+      objectReference: {fileID: 1478895984}
     - target: {fileID: 2407859463221227455, guid: 0f1d12797ec960541ae67ec88386f6e6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.303
