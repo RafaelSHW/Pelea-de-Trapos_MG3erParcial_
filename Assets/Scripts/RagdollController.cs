@@ -8,6 +8,9 @@ public class RagdollController : MonoBehaviour
     private Animator animator;
     private CharacterController characterController;
 
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip DeathClip;
+
     void Awake()
     {
         animator = GetComponent<Animator>();
@@ -40,6 +43,7 @@ public class RagdollController : MonoBehaviour
                 // Solo cuando el ragdoll está ACTIVO
                 rb.linearVelocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
+                audioSource.PlayOneShot(DeathClip);
             }
         }
 

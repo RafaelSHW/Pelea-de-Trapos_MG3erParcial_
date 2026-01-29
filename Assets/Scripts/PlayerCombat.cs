@@ -16,6 +16,10 @@ public class PlayerCombat : MonoBehaviour
     private PlayerGrabSystem grabSystem;
     private bool isAttacking = false;
 
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip hitClip;
+    [SerializeField] private AudioClip KickClip;
+
     void Start()
     {
         animator.SetLayerWeight(punchLayerIndex, 0f);
@@ -42,6 +46,8 @@ public class PlayerCombat : MonoBehaviour
         animator.ResetTrigger("Punch");
         animator.ResetTrigger("AttackWithObject");
 
+        audioSource.PlayOneShot(hitClip);
+
         if (grabSystem != null && grabSystem.IsHoldingObject())
             animator.SetTrigger("AttackWithObject");
         else
@@ -60,6 +66,8 @@ public class PlayerCombat : MonoBehaviour
 
         animator.ResetTrigger("Kick");
         animator.SetTrigger("Kick");
+
+        audioSource.PlayOneShot(KickClip);
 
         yield return new WaitForSeconds(GetAnimationLength("Kick"));
 

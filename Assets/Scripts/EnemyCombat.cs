@@ -9,6 +9,9 @@ public class EnemyCombat : MonoBehaviour
     private Animator animator;
     private bool isAttacking = false;
 
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip hitClip;
+
     void Awake()
     {
         animator = GetComponent<Animator>();
@@ -21,6 +24,8 @@ public class EnemyCombat : MonoBehaviour
 
         animator.ResetTrigger("Punch");
         animator.SetTrigger("Punch");
+
+        audioSource.PlayOneShot(hitClip);
     }
 
     public void DealDamage()
