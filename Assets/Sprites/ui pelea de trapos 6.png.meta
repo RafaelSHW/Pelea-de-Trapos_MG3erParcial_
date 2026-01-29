@@ -234,11 +234,11 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 333
-        width: 464
+        width: 418
         height: 346
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 49, w: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
@@ -334,6 +334,50 @@ TextureImporter:
       bones: []
       spriteID: 76cdd45a0e33f144a94d525aeb18dcce
       internalID: 1128794879
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui pelea de trapos 6_4
+      rect:
+        serializedVersion: 2
+        x: 286
+        y: 658
+        width: 267
+        height: 207
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 712ec319a7e00eb46828ab4a6512d0e7
+      internalID: -2003549306
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui pelea de trapos 6_5
+      rect:
+        serializedVersion: 2
+        x: 1507
+        y: 658
+        width: 288
+        height: 162
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ff8f5c6198687054895fa315ca1c8e5f
+      internalID: 1370495240
       vertices: []
       indices: 
       edges: []
