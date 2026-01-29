@@ -17,10 +17,9 @@ public class KickImpact : MonoBehaviour
 
         Consciousness target = other.GetComponentInParent<Consciousness>();
 
-        if (target != null)
+        if (target != null && !target.IsUnconscious())
         {
             alreadyHit = true;
-
             target.ReceiveImpact(kickDamage);
 
             if (GameManager.instance != null)
@@ -28,13 +27,13 @@ public class KickImpact : MonoBehaviour
                 GameManager.instance.AddPoints(true, 20);
             }
 
-            Debug.Log("Golpe único registrado");
             if (scorePopupPrefab != null)
             {
-
                 GameObject popup = Instantiate(scorePopupPrefab, transform.position, Quaternion.identity);
-
-                popup.GetComponent<FloatingNumber>().SetText(20);
+                if (popup.TryGetComponent<FloatingNumber>(out FloatingNumber fn))
+                {
+                    fn.SetText(kickDamage);
+                }
             }
         }
     }

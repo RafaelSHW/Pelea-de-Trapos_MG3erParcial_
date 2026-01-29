@@ -35,8 +35,13 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (consciousness != null && consciousness.IsKnockedDown())
+        if (consciousness == null) return;
+
+        if (consciousness.IsUnconscious() || consciousness.IsKnockedDown())
+        {
+            if (animator != null) animator.SetBool("IsWalking", false);
             return;
+        }
 
         HandleMovement();
         HandleAnimations();
@@ -44,6 +49,8 @@ public class PlayerController : MonoBehaviour
 
     void HandleMovement()
     {
+        if (controller == null || !controller.enabled || !gameObject.activeInHierarchy) return;
+
         float x = Input.GetAxisRaw("Horizontal");
         float z = Input.GetAxisRaw("Vertical");
 
@@ -72,7 +79,11 @@ public class PlayerController : MonoBehaviour
         }
 
         verticalVelocity.y += gravity * Time.deltaTime;
-        controller.Move(verticalVelocity * Time.deltaTime);
+
+        if (controller.enabled)
+        {
+            controller.Move(verticalVelocity * Time.deltaTime);
+        }
     }
 
     void HandleAnimations()

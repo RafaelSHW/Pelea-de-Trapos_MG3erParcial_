@@ -4,12 +4,6 @@ using System.Collections;
 public class PlayerCombat : MonoBehaviour
 {
     public Animator animator;
-    public float attackRange = 2f;
-    public LayerMask enemyLayer;
-
-    [Header("Attack Values")]
-    public int punchPoints = 20;
-    public int kickPoints = 20;
 
     [Header("Timing (seconds)")]
     public float punchHitTime = 0.25f;
@@ -43,10 +37,7 @@ public class PlayerCombat : MonoBehaviour
     {
         isAttacking = true;
 
-        // Activar capa superior
-        yield return StartCoroutine(
-            BlendLayerWeight(punchLayerIndex, 1f, layerBlendTime)
-        );
+        yield return StartCoroutine(BlendLayerWeight(punchLayerIndex, 1f, layerBlendTime));
 
         animator.ResetTrigger("Punch");
         animator.ResetTrigger("AttackWithObject");
@@ -56,26 +47,11 @@ public class PlayerCombat : MonoBehaviour
         else
             animator.SetTrigger("Punch");
 
-        // Esperar al momento del impacto
-        yield return new WaitForSeconds(punchHitTime);
-        TryHit(punchPoints);
+        yield return new WaitForSeconds(GetAnimationLength("Punch"));
 
-        // Esperar a que termine la animación
-        yield return new WaitForSeconds(
-            Mathf.Max(0.05f, GetAnimationLength("Punch") - punchHitTime)
-        );
-
-        // Desactivar capa
-        yield return StartCoroutine(
-            BlendLayerWeight(punchLayerIndex, 0f, layerBlendTime)
-        );
+        yield return StartCoroutine(BlendLayerWeight(punchLayerIndex, 0f, layerBlendTime));
 
         isAttacking = false;
-    }
-
-    public void ObjectHit()
-    {
-        TryHit(punchPoints);
     }
 
     IEnumerator Kick()
@@ -85,36 +61,9 @@ public class PlayerCombat : MonoBehaviour
         animator.ResetTrigger("Kick");
         animator.SetTrigger("Kick");
 
-        yield return new WaitForSeconds(kickHitTime);
-        TryHit(kickPoints);
-
-        yield return new WaitForSeconds(
-            Mathf.Max(0.05f, GetAnimationLength("Kick") - kickHitTime)
-        );
+        yield return new WaitForSeconds(GetAnimationLength("Kick"));
 
         isAttacking = false;
-    }
-
-    void TryHit(int points)
-    {
-        Vector3 origin =
-            transform.position +
-            transform.forward * 0.5f +
-            Vector3.up * 1.2f;
-
-        Debug.DrawRay(origin, transform.forward * attackRange, Color.red, 0.5f);
-
-        if (Physics.Raycast(origin, transform.forward, out RaycastHit hit, attackRange, enemyLayer))
-        {
-            Consciousness target =
-                hit.collider.GetComponentInParent<Consciousness>();
-
-            if (target != null)
-            {
-                target.ReceiveImpact(points);
-                GameManager.instance.AddPoints(true, 20);
-            }
-        }
     }
 
     float GetAnimationLength(string animName)
@@ -124,7 +73,6 @@ public class PlayerCombat : MonoBehaviour
             if (clip.name.Contains(animName))
                 return clip.length;
         }
-
         return 0.6f;
     }
 
@@ -136,20 +84,13 @@ public class PlayerCombat : MonoBehaviour
         while (time < duration)
         {
             time += Time.deltaTime;
-            animator.SetLayerWeight(
-                layer,
-                Mathf.Lerp(start, target, time / duration)
-            );
+            animator.SetLayerWeight(layer, Mathf.Lerp(start, target, time / duration));
             yield return null;
         }
 
         animator.SetLayerWeight(layer, target);
     }
-    public void DealDamage()
-    {
-    }
 
-    public void EndAttack()
-    {
-    }
+    public void DealDamage() { }
+    public void EndAttack() { }
 }
